@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html
+    xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Конвертер валют</title>
+        <link rel="stylesheet" href="../static/css/custom.css" />
+    </head>
+    <div th:replace="header :: head"></div>
+    <body>
+        <div id="main" class="container-fluid">
+            <form ruName="form" th:object="${converter}" th:action="@{/}" method="POST">
+                <div th:if="${#fields.hasErrors('global')}" class="alert alert-danger" role="alert">
+                    <strong th:each="err : ${#fields.globalErrors()}" th:text="${err}"></strong>
+                </div>
+                <h1>Конвертер валют</h1>
+                <div class="container">
+                    <div class="row">
+                        <div th:classappend="${#fields.hasErrors('*{amount}')}? has-error">
+                            <div class="input-group">
+                                <input type="text" th:field="*{amount}" class="form-control" placeholder="0,00" autofocus="true" />
+                                <span class="help-block" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-5" th:classappend="${#fields.hasErrors('*{sourceCurrency}')}? has-error">
+                            <div class="input-group">
+                                <select th:field="*{sourceCurrency}" class="bootstrap-select">
+                                    <option th:each="sourceCurrency : ${currencies}" th:value="${sourceCurrency}" th:text="${sourceCurrency.ruName}"></option>
+                                </select>
+                                <span class="help-block" th:if="${#fields.hasErrors('sourceCurrency')}" th:errors="*{sourceCurrency}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"> перевести в </div>
+                    <div class="row">
+                        <div class="form-group col-sm-5" th:classappend="${#fields.hasErrors('*{targetCurrency}')}? has-error">
+                            <div class="input-group">
+                                <select th:field="*{targetCurrency}" class="bootstrap-select">
+                                    <option th:each="targetCurrency : ${currencies}" th:value="${targetCurrency}" th:text="${targetCurrency.ruName}"></option>
+                                </select>
+                                <span class="help-block" th:if="${#fields.hasErrors('targetCurrency')}" th:errors="*{targetCurrency}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <input type="submit" class="btn" value="Рассчитать" />
+                    </div>
+                    <div id="current-result" class="result">
+                        <ul th:each="source : ${rateSourcesResult}">
+                            <li>
+                                <div class="rate-source-content">
+                                    <span th:text="${source.value[1]}" />
+                                    <div class="rate-for-unit">
+                                1 
+                                        <span class="currency-code" th:text="${sourceCurrency}"></span>=
+                                        <span th:text="${source.value[0]}"></span>
+                                        <span class="currency-code" th:text="${targetCurrency}"></span>
+                                    </div>
+                                    <span class="source" th:text="${source.key}"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="history-result" class="result">
+                    <ul th:each="item,i : ${history}" th:class="${i.odd}? 'odd'">
+                        <li>
+                            <div class="row">
+                                <div class="row-wrapper">
+                                    <div class="left" >
+                                        <span th:text="${item.formattedAmount}"></span>
+                                        <span th:text="${item.sourceCurrency}"></span>
+                                    </div>
+                                    <div id="delimiter">~</div>
+                                    <div class="right" >
+                                        <span th:text="${item.formattedRate}"></span>
+                                        <span th:text="${item.targetCurrency}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd" ruName="spring-boot-cache">
+	<cache ruName="oerRates"
+		   maxEntriesLocalHeap="2000"
+		   timeToLiveSeconds="3600">
+	</cache>
+	<cache ruName="cbrRates"
+		   maxEntriesLocalHeap="2000"
+		   timeToLiveSeconds="3600">
+	</cache>
+</ehcache> 
